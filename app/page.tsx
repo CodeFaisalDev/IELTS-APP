@@ -1,101 +1,110 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { BookOpen, Layers } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import FullExamSelectorModal from "@/components/custom/FullExamSelectorModal";
+
+export default function HomePage() {
+  const [modalOpen, setModalOpen] = useState(false);
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 space-y-16">
+      {/* Hero Section */}
+      <section className="text-center space-y-4">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold">
+          IELTS Practice App
+        </h1>
+        <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto">
+          AI-powered IELTS preparation tailored for{" "}
+          <span className="font-semibold text-primary">
+            Bangladeshi students
+          </span>{" "}
+          — practice Listening, Reading, Writing, and Speaking with real exam
+          questions and instant feedback.
+        </p>
+      </section>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      {/* Options Section */}
+      <section className="grid sm:grid-cols-2 gap-6 lg:gap-8">
+        <Link href="/one-module" className="block">
+          <Card className="group cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            <CardHeader className="flex flex-col items-center space-y-5 py-10">
+              <div className="p-4 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                <BookOpen className="h-12 w-12 text-primary" />
+              </div>
+              <CardTitle className="text-lg sm:text-xl">
+                Practice One Module
+              </CardTitle>
+              <CardDescription className="text-center text-sm sm:text-base">
+                Focus on Listening, Reading, Writing, or Speaking individually.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </Link>
+
+        {/* Full Exam Button */}
+        <button
+          onClick={() => setModalOpen(true)}
+          className="w-full block text-left"
         >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <Card className="group cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            <CardHeader className="flex flex-col items-center space-y-5 py-10">
+              <div className="p-4 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                <Layers className="h-12 w-12 text-primary" />
+              </div>
+              <CardTitle className="text-lg sm:text-xl">
+                Practice Full Exam
+              </CardTitle>
+              <CardDescription className="text-center text-sm sm:text-base">
+                Simulate a real IELTS exam covering all modules in sequence.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </button>
+      </section>
+
+      {/* Info Section */}
+      <section className="space-y-4 text-center max-w-4xl mx-auto">
+        <h2 className="text-xl sm:text-2xl font-semibold">How It Works</h2>
+        <p className="text-sm sm:text-base text-muted-foreground">
+          Our platform provides authentic IELTS questions sourced from official
+          practice materials. Choose between Easy or Hard mode — in Easy mode,
+          get hints, Bangla translations, and guidance; in Hard mode, experience
+          the real test environment. All answers are evaluated instantly using
+          AI, giving you detailed feedback and improvement tips.
+        </p>
+      </section>
+
+      {/* Benefits Section */}
+      <section className="space-y-4 max-w-4xl mx-auto">
+        <h2 className="text-xl sm:text-2xl font-semibold text-center">
+          Why Use This App?
+        </h2>
+        <ul className="pl-5 space-y-2 text-sm sm:text-base text-muted-foreground  text-center">
+          <li>Authentic IELTS practice questions from official sources.</li>
+          <li>
+            Bangla translations to help Bangladeshi students understand better.
+          </li>
+          <li>
+            AI-powered scoring and feedback for Listening, Reading, Writing, and
+            Speaking.
+          </li>
+          <li>Resume your practice anytime, even if you close the browser.</li>
+          <li>
+            Practice one module at a time or take the full simulated exam.
+          </li>
+        </ul>
+      </section>
+
+      {/* Full Exam Modal */}
+      <FullExamSelectorModal open={modalOpen} onOpenChange={setModalOpen} />
     </div>
   );
 }
