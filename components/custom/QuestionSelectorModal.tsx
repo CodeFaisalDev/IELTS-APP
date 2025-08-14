@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Props {
   open: boolean;
@@ -29,12 +29,20 @@ export default function QuestionSelectorModal({
   module,
 }: Props) {
   const router = useRouter();
-  const [selectedSet, setSelectedSet] = useState<string>("");
+  const [selectedSlug, setSelectedSlug] = useState<string>("");
+
+  const [tests, setTests] = useState<{ title: string; slug: string }[]>([]);
+
+  useEffect(() => {
+    fetch("/api/listening")
+      .then((res) => res.json())
+      .then((data) => setTests(data));
+  }, []);
 
   const handleStart = () => {
-    if (module && selectedSet) {
+    if (module && selectedSlug) {
       onOpenChange(false);
-      router.push(`/${module}/${encodeURIComponent(selectedSet)}`);
+      router.push(`/${module}/${encodeURIComponent(selectedSlug)}`);
     }
   };
 
@@ -46,14 +54,14 @@ export default function QuestionSelectorModal({
         </DialogHeader>
 
         <div className="space-y-4">
-          <Select onValueChange={setSelectedSet}>
-            <SelectTrigger className="bg-input text-foreground border border-input rounded-md">
-              <SelectValue placeholder="Select Cambridge IELTS Set" />
+          <Select onValueChange={setSelectedSlug}>
+            <SelectTrigger>
+              <SelectValue placeholder="" />
             </SelectTrigger>
-            <SelectContent className="bg-white text-black">
-              {Array.from({ length: 18 }, (_, i) => (
-                <SelectItem key={i} value={`Cambridge IELTS ${i + 1}`}>
-                  Cambridge IELTS {i + 1}
+            <SelectContent className="text-black bg-white">
+              {tests.map((test) => (
+                <SelectItem key={test.slug} value={test.slug}>
+                  {test.title}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -62,7 +70,7 @@ export default function QuestionSelectorModal({
           <Button
             className="w-full"
             onClick={handleStart}
-            disabled={!selectedSet}
+            disabled={!selectedSlug}
           >
             Start Practice
           </Button>

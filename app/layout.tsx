@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/custom/theme-provider";
 import { ThemeToggle } from "@/components/custom/theme-toggle";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="flex min-h-screen flex-col">
@@ -26,6 +27,7 @@ export default function RootLayout({
               <ThemeToggle />
             </header>
             <main className="flex-1 p-4">{children}</main>
+            <Toaster />
             <footer className="border-t p-4 text-center text-sm">
               © {new Date().getFullYear()} IELTS Practice App
             </footer>
