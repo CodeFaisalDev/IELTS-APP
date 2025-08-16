@@ -89,9 +89,34 @@ input, textarea {
 @layer base {
   * {
     @apply border-border;
+
   }
+
+
   body {
     @apply bg-background text-foreground;
+  }
+
+
+
+   .listening-test-content table {
+    @apply w-full my-6 border-collapse text-sm;
+  }
+  .listening-test-content th,
+  .listening-test-content td {
+    @apply border border-slate-300 p-3 text-left align-top;
+  }
+  .listening-test-content th {
+    @apply bg-slate-100 font-semibold;
+  }
+  
+  /* Optional: Dark mode styles */
+  .dark .listening-test-content th,
+  .dark .listening-test-content td {
+    @apply border-slate-600;
+  }
+  .dark .listening-test-content th {
+    @apply bg-slate-800;
   }
 }
 
