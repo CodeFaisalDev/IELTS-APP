@@ -52,10 +52,8 @@ export default function OneModulePage() {
         <p className="text-muted-foreground max-w-2xl mx-auto">
           Choose a single IELTS module to focus on. Perfect for quick practice
           sessions to boost your skills. This tool is specially designed for{" "}
-          <span className="font-semibold text-primary">
-            Bangladeshi students
-          </span>{" "}
-          preparing for IELTS.
+          <span className="font-semibold text-primary">students</span> preparing
+          for IELTS.
         </p>
       </div>
 

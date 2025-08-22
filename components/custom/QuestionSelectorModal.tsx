@@ -30,14 +30,25 @@ export default function QuestionSelectorModal({
 }: Props) {
   const router = useRouter();
   const [selectedSlug, setSelectedSlug] = useState<string>("");
-
   const [tests, setTests] = useState<{ title: string; slug: string }[]>([]);
 
   useEffect(() => {
-    fetch("/api/listening")
-      .then((res) => res.json())
-      .then((data) => setTests(data));
-  }, []);
+    if (!module) return;
+
+    const fetchTests = async () => {
+      try {
+        const res = await fetch(`/api/${module}`);
+        if (!res.ok) throw new Error("Failed to fetch");
+        const data = await res.json();
+        setTests(data);
+      } catch (err) {
+        console.error("Error fetching tests:", err);
+        setTests([]);
+      }
+    };
+
+    fetchTests();
+  }, [module]); // 👈 refetch whenever module changes
 
   const handleStart = () => {
     if (module && selectedSlug) {
@@ -50,20 +61,28 @@ export default function QuestionSelectorModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-white text-black rounded-xl shadow-lg max-w-md mx-auto">
         <DialogHeader>
-          <DialogTitle>Select Practice Set</DialogTitle>
+          <DialogTitle>
+            {module ? `Select ${module} Practice Set` : "Select Practice Set"}
+          </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
-          <Select onValueChange={setSelectedSlug}>
+          <Select onValueChange={setSelectedSlug} value={selectedSlug}>
             <SelectTrigger>
-              <SelectValue placeholder="" />
+              <SelectValue placeholder="Choose a test..." />
             </SelectTrigger>
             <SelectContent className="text-black bg-white">
-              {tests.map((test) => (
-                <SelectItem key={test.slug} value={test.slug}>
-                  {test.title}
-                </SelectItem>
-              ))}
+              {tests.length > 0 ? (
+                tests.map((test) => (
+                  <SelectItem key={test.slug} value={test.slug}>
+                    {test.title}
+                  </SelectItem>
+                ))
+              ) : (
+                <div className="px-3 py-2 text-sm text-gray-500">
+                  No tests available
+                </div>
+              )}
             </SelectContent>
           </Select>
 

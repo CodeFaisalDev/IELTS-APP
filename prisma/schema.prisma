@@ -56,3 +56,35 @@ model ListeningTest {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model ReadingTest {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  section1  String?
+  section2  String?
+  section3  String?
+  answers   Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model WritingTest {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  section1  String? // Rich text content for Task 1
+  section2  String? // Rich text content for Task 2
+  answers   Json? // Answers for both sections: {"section1": "answer1", "section2": "answer2"}
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SpeakingTest {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  content   Json // This will hold the entire test structure
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
