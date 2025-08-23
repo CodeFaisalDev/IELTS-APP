@@ -33,6 +33,6 @@
     "**/*.jsx",
     ".next/types/**/*.ts",
     "components/custom/CKEditorWrapper.jsx"
-  ],
+, ".next/types/app/listening/[slug]/page.tsx"  ],
   "exclude": ["node_modules"]
 }
