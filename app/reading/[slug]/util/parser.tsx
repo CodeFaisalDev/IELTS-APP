@@ -95,19 +95,25 @@ const renderHtmlWithInputs = (
         const existingClass = element.getAttribute("class") || "";
         const style = element.getAttribute("style") || "";
         const inlineStyle = parseInlineStyle(style);
-        
+
         // Preserve text alignment from rich text editor
-        if (existingClass.includes("text-center") || 
-            inlineStyle.textAlign === "center") {
+        if (
+          existingClass.includes("text-center") ||
+          inlineStyle.textAlign === "center"
+        ) {
           props.className = `${props.className || ""} text-center`.trim();
-        } else if (existingClass.includes("text-right") || 
-                   inlineStyle.textAlign === "right") {
+        } else if (
+          existingClass.includes("text-right") ||
+          inlineStyle.textAlign === "right"
+        ) {
           props.className = `${props.className || ""} text-right`.trim();
-        } else if (existingClass.includes("text-left") || 
-                   inlineStyle.textAlign === "left") {
+        } else if (
+          existingClass.includes("text-left") ||
+          inlineStyle.textAlign === "left"
+        ) {
           props.className = `${props.className || ""} text-left`.trim();
         }
-        
+
         if (style) {
           props.style = { ...parseInlineStyle(style) };
         }
@@ -120,59 +126,74 @@ const renderHtmlWithInputs = (
         const width = element.getAttribute("width");
         const height = element.getAttribute("height");
         const style = element.getAttribute("style");
-        
+
         if (src) {
           props.src = src;
           props.alt = alt;
-          
+
           // Preserve alignment from rich text editor
           let imageClasses = "max-w-full h-auto";
-          
+
           // Check for alignment in style or class
           const existingClass = element.getAttribute("class") || "";
           const inlineStyle = parseInlineStyle(style || "");
-          
+
           // Detect center alignment
-          if (existingClass.includes("center") || 
-              existingClass.includes("mx-auto") ||
-              inlineStyle.textAlign === "center" ||
-              inlineStyle.marginLeft === "auto" ||
-              (inlineStyle.marginLeft === "auto" && inlineStyle.marginRight === "auto")) {
+          if (
+            existingClass.includes("center") ||
+            existingClass.includes("mx-auto") ||
+            inlineStyle.textAlign === "center" ||
+            inlineStyle.marginLeft === "auto" ||
+            (inlineStyle.marginLeft === "auto" &&
+              inlineStyle.marginRight === "auto")
+          ) {
             imageClasses += " mx-auto block";
           }
           // Detect right alignment
-          else if (existingClass.includes("right") || 
-                   existingClass.includes("ml-auto") ||
-                   inlineStyle.textAlign === "right" ||
-                   inlineStyle.float === "right") {
+          else if (
+            existingClass.includes("right") ||
+            existingClass.includes("ml-auto") ||
+            inlineStyle.textAlign === "right" ||
+            inlineStyle.float === "right"
+          ) {
             imageClasses += " ml-auto block";
           }
           // Detect left alignment (default)
-          else if (existingClass.includes("left") || 
-                   inlineStyle.textAlign === "left" ||
-                   inlineStyle.float === "left") {
+          else if (
+            existingClass.includes("left") ||
+            inlineStyle.textAlign === "left" ||
+            inlineStyle.float === "left"
+          ) {
             imageClasses += " mr-auto block";
           }
-          
+
           props.className = `${existingClass} ${imageClasses}`.trim();
-          
+
           if (width) props.width = width;
           if (height) props.height = height;
           if (style) {
-            props.style = { 
+            props.style = {
               ...parseInlineStyle(style),
               // Preserve display and margin styles for alignment
               ...(inlineStyle.display && { display: inlineStyle.display }),
               ...(inlineStyle.margin && { margin: inlineStyle.margin }),
-              ...(inlineStyle.marginLeft && { marginLeft: inlineStyle.marginLeft }),
-              ...(inlineStyle.marginRight && { marginRight: inlineStyle.marginRight }),
-              ...(inlineStyle.textAlign && { textAlign: inlineStyle.textAlign })
+              ...(inlineStyle.marginLeft && {
+                marginLeft: inlineStyle.marginLeft,
+              }),
+              ...(inlineStyle.marginRight && {
+                marginRight: inlineStyle.marginRight,
+              }),
+              ...(inlineStyle.textAlign && {
+                textAlign: inlineStyle.textAlign,
+              }),
             };
           }
-          
+
           // Add loading and error handling
           props.loading = "lazy";
-          props.onError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+          props.onError = (
+            e: React.SyntheticEvent<HTMLImageElement, Event>
+          ) => {
             console.error("Image failed to load:", src);
             e.currentTarget.style.display = "none";
           };
@@ -189,7 +210,7 @@ const renderHtmlWithInputs = (
 
       // Handle other common HTML attributes
       const attributesToCopy = ["href", "target", "rel", "title"];
-      attributesToCopy.forEach(attr => {
+      attributesToCopy.forEach((attr) => {
         const value = element.getAttribute(attr);
         if (value) props[attr] = value;
       });
@@ -212,19 +233,21 @@ const renderHtmlWithInputs = (
 const parseInlineStyle = (styleStr: string): React.CSSProperties => {
   const styles: React.CSSProperties = {};
   if (!styleStr) return styles;
-  
-  styleStr.split(';').forEach(style => {
-    const colonIndex = style.indexOf(':');
+
+  styleStr.split(";").forEach((style) => {
+    const colonIndex = style.indexOf(":");
     if (colonIndex > 0) {
       const property = style.slice(0, colonIndex).trim();
       const value = style.slice(colonIndex + 1).trim();
-      
+
       // Convert CSS property names to camelCase for React
-      const camelCaseProperty = property.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+      const camelCaseProperty = property.replace(/-([a-z])/g, (g) =>
+        g[1].toUpperCase()
+      );
       (styles as any)[camelCaseProperty] = value;
     }
   });
-  
+
   return styles;
 };
 

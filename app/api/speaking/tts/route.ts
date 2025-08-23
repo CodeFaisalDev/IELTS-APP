@@ -1,5 +1,3 @@
-// app/api/tts/route.ts - ElevenLabs Version
-
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -81,7 +79,8 @@ export async function POST(request: NextRequest) {
         "Cache-Control": "no-cache",
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    // Change `error: any` to `error: unknown`
     console.error("ElevenLabs TTS API error:", error);
 
     return NextResponse.json(

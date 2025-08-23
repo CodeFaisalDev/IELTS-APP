@@ -42,5 +42,5 @@ export interface ListeningTestUIProps {
   timeLeft: number;
   onFinishExam: () => void;
   children: React.ReactNode;
-  audioRef: React.RefObject<HTMLAudioElement>;
+  audioRef: React.RefObject<HTMLAudioElement | null>;
 }

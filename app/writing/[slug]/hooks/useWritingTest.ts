@@ -23,18 +23,7 @@ export const useWritingTest = (
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [testCompleted, setTestCompleted] = useState(false);
   const [evaluationResult, setEvaluationResult] = useState(null);
-  const [isLoading, setIsLoading] = useState(false); //  NEW: State for loading
-
-  const finishExamAndShowResults = useCallback(() => {
-    setTestCompleted(true);
-    if (test) {
-      handleConfirmedFinish();
-    }
-  }, [test]);
-
-  const handleFinishExam = useCallback(() => {
-    setShowConfirmModal(true);
-  }, []);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleConfirmedFinish = useCallback(async () => {
     setShowConfirmModal(false);
@@ -46,7 +35,7 @@ export const useWritingTest = (
       return;
     }
 
-    // 👈 Set loading state to true immediately
+    // Set loading state to true immediately
     setIsLoading(true);
 
     const taskQuestion1 = stripHtml(test.section1 || "");
@@ -79,13 +68,24 @@ export const useWritingTest = (
       console.log("✅ Evaluation Result:", result);
       setEvaluationResult(result);
     } catch (error) {
-      console.error(" Failed to send data to API:", error);
+      console.error("Failed to send data to API:", error);
     } finally {
-      // 👈 Set loading to false and show result modal when API call is complete
+      // Set loading to false and show result modal when API call is complete
       setIsLoading(false);
       setShowResultModal(true);
     }
   }, [test, userAnswers]);
+
+  const finishExamAndShowResults = useCallback(() => {
+    setTestCompleted(true);
+    if (test) {
+      handleConfirmedFinish();
+    }
+  }, [test, handleConfirmedFinish]);
+
+  const handleFinishExam = useCallback(() => {
+    setShowConfirmModal(true);
+  }, []);
 
   useEffect(() => {
     if (!test || !started || testCompleted) return;
@@ -94,7 +94,7 @@ export const useWritingTest = (
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          handleConfirmedFinish();
+          finishExamAndShowResults();
           return 0;
         }
         return prev - 1;
@@ -102,7 +102,7 @@ export const useWritingTest = (
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [test, started, testCompleted, handleConfirmedFinish]);
+  }, [test, started, testCompleted, finishExamAndShowResults]);
 
   const handleInputChange = (section: string, value: string) => {
     if (!testCompleted) {
@@ -119,7 +119,7 @@ export const useWritingTest = (
     showConfirmModal,
     setShowConfirmModal,
     evaluationResult,
-    isLoading, //  EXPOSE: The new isLoading state
+    isLoading,
     handlers: {
       handleInputChange,
       handleFinishExam,

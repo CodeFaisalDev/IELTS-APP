@@ -23,11 +23,12 @@ export default function TermsAndServicesPage() {
           <CardContent className="p-8 text-gray-700 dark:text-gray-300 space-y-6">
             <section>
               <p className="leading-relaxed">
-                Please read these Terms of Service ("Terms", "Terms of Service")
-                carefully before using our application (the "Service") operated
-                by us. Your access to and use of the Service is conditioned on
-                your acceptance of and compliance with these Terms. These Terms
-                apply to all visitors, users, and others who access or use the
+                Please read these Terms of Service (&quot;Terms&quot;,
+                &quot;Terms of Service&quot;) carefully before using our
+                application (the &quot;Service&quot;) operated by us. Your
+                access to and use of the Service is conditioned on your
+                acceptance of and compliance with these Terms. These Terms apply
+                to all visitors, users, and others who access or use the
                 Service.
               </p>
             </section>
@@ -144,7 +145,7 @@ export default function TermsAndServicesPage() {
                 replace these Terms at any time. We will provide notice of
                 changes on this page. By continuing to access or use our Service
                 after those revisions become effective, you agree to be bound by
-                the revised terms. -{" "}
+                the revised terms. -
               </p>
             </section>
 

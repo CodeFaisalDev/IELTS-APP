@@ -17,7 +17,6 @@ import { ResultModalProps, QuestionResult } from "../types";
 
 const ResultModal: React.FC<ResultModalProps> = ({
   isOpen,
-  onClose,
   backendAnswers,
   userAnswers,
   onStartAnother,

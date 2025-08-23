@@ -7,7 +7,7 @@ type UserAnswers = Record<string, string | string[]>;
 export const useListeningTest = (
   test: ListeningTestData | null,
   started: boolean,
-  audioRef: React.RefObject<HTMLAudioElement>
+  audioRef: React.RefObject<HTMLAudioElement | null>
 ) => {
   const [userAnswers, setUserAnswers] = useState<UserAnswers>({});
   const [organizedAnswers, setOrganizedAnswers] = useState<UserAnswers>({});

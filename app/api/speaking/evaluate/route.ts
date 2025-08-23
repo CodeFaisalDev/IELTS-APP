@@ -119,14 +119,31 @@ export async function POST(request: NextRequest) {
     const evaluation = JSON.parse(cleanedJsonString);
 
     return NextResponse.json(evaluation);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error calling Google Gemini API:", error);
-    // Check if the error is from the Gemini API itself
-    if (error.response && error.response.data) {
-      console.error("Gemini API Response Error:", error.response.data);
+    let errorMessage = "Failed to evaluate speaking test";
+
+    // Use a type guard to check if the error is an object with a message property
+    if (typeof error === "object" && error !== null && "message" in error) {
+      errorMessage = (error as { message: string }).message;
     }
+
+    // Check if the error is from the Gemini API itself
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "response" in error &&
+      typeof (error as { response: any }).response === "object" &&
+      "data" in (error as { response: any }).response
+    ) {
+      console.error(
+        "Gemini API Response Error:",
+        (error as { response: any }).response.data
+      );
+    }
+
     return NextResponse.json(
-      { error: "Failed to evaluate speaking test", details: error.message },
+      { error: "Failed to evaluate speaking test", details: errorMessage },
       { status: 500 }
     );
   }

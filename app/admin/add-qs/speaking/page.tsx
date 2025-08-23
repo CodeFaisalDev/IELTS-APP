@@ -9,11 +9,27 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlusCircle, Trash2 } from "lucide-react";
 
+// Define the types for your data structures
+type Question = {
+  text: string;
+  sampleAnswer: string;
+};
+
+type SpeakingContent = {
+  introduction: Question[];
+  part1: Question[];
+  part2: Question[];
+  part3: Question[];
+  closing: string;
+  cueCard: string;
+};
+
 export default function AddSpeakingTestPage() {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
-  const [content, setContent] = useState<any>({
+  // Use the new type for the state
+  const [content, setContent] = useState<SpeakingContent>({
     introduction: [],
     part1: [],
     part2: [],
@@ -23,20 +39,20 @@ export default function AddSpeakingTestPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleTextChange = (part: string, value: string) => {
-    setContent((prevContent: any) => ({
+  const handleTextChange = (part: "closing" | "cueCard", value: string) => {
+    setContent((prevContent) => ({
       ...prevContent,
       [part]: value,
     }));
   };
 
   const handleQuestionChange = (
-    part: string,
+    part: "introduction" | "part1" | "part2" | "part3",
     index: number,
-    field: string,
+    field: keyof Question, // Use keyof to specify allowed fields
     value: string
   ) => {
-    setContent((prevContent: any) => {
+    setContent((prevContent) => {
       const newContent = { ...prevContent };
       if (newContent[part] && newContent[part][index]) {
         newContent[part][index][field] = value;
@@ -46,43 +62,73 @@ export default function AddSpeakingTestPage() {
   };
 
   const addQuestion = (part: "introduction" | "part1" | "part2" | "part3") => {
-    setContent((prev: any) => {
+    setContent((prev) => {
       const newContent = { ...prev };
-      newContent[part] = newContent[part] || [];
       newContent[part].push({ text: "", sampleAnswer: "" });
       return newContent;
     });
   };
 
-  const removeQuestion = (part: string, index: number) => {
-    setContent((prev: any) => {
+  const removeQuestion = (
+    part: "introduction" | "part1" | "part2" | "part3",
+    index: number
+  ) => {
+    setContent((prev) => {
       const newContent = { ...prev };
-      newContent[part] = newContent[part].filter((_: any, i: number) => i !== index);
+      newContent[part] = newContent[part].filter(
+        (_: Question, i: number) => i !== index
+      );
       return newContent;
     });
   };
-  
-  const renderQuestions = (part: string, questions: any[]) => (
+
+  // Pass the correct types to renderQuestions
+  const renderQuestions = (part: string, questions: Question[]) => (
     <div className="space-y-4">
-      {questions.map((q: any, index: number) => (
+      {questions.map((q, index) => (
         <Card key={index} className="p-4 bg-gray-50 dark:bg-gray-800">
           <div className="flex items-center space-x-2 mb-2">
             <Label>Question {index + 1}:</Label>
-            <Button type="button" variant="ghost" size="icon" onClick={() => removeQuestion(part, index)} className="text-red-500 hover:text-red-700">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() =>
+                removeQuestion(
+                  part as "introduction" | "part1" | "part2" | "part3",
+                  index
+                )
+              }
+              className="text-red-500 hover:text-red-700"
+            >
               <Trash2 className="w-4 h-4" />
             </Button>
           </div>
           <Textarea
             placeholder="Enter question text..."
             value={q.text}
-            onChange={(e) => handleQuestionChange(part, index, "text", e.target.value)}
+            onChange={(e) =>
+              handleQuestionChange(
+                part as "introduction" | "part1" | "part2" | "part3",
+                index,
+                "text",
+                e.target.value
+              )
+            }
             className="mb-2"
           />
           <Label>Sample Answer:</Label>
           <Textarea
             placeholder="Enter sample answer for tips..."
             value={q.sampleAnswer}
-            onChange={(e) => handleQuestionChange(part, index, "sampleAnswer", e.target.value)}
+            onChange={(e) =>
+              handleQuestionChange(
+                part as "introduction" | "part1" | "part2" | "part3",
+                index,
+                "sampleAnswer",
+                e.target.value
+              )
+            }
           />
         </Card>
       ))}
@@ -92,13 +138,13 @@ export default function AddSpeakingTestPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-  
+
     if (!title || !slug) {
       alert("Please fill in the title and slug.");
       setIsSubmitting(false);
       return;
     }
-  
+
     // Reformat the data for submission to match the required backend structure
     const submissionData = {
       title,
@@ -120,14 +166,14 @@ export default function AddSpeakingTestPage() {
         cueCard: content.cueCard,
       },
     };
-  
+
     try {
       const res = await fetch("/api/speaking", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(submissionData),
       });
-  
+
       if (res.ok) {
         alert("Speaking test created successfully!");
         router.push("/admin");
@@ -168,7 +214,9 @@ export default function AddSpeakingTestPage() {
               <Input
                 id="slug"
                 value={slug}
-                onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"))}
+                onChange={(e) =>
+                  setSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"))
+                }
                 placeholder="e.g., speaking-test-1"
               />
             </div>
@@ -181,7 +229,11 @@ export default function AddSpeakingTestPage() {
             <CardTitle>Introduction</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Button type="button" variant="outline" onClick={() => addQuestion("introduction")}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => addQuestion("introduction")}
+            >
               <PlusCircle className="w-4 h-4 mr-2" />
               Add Introduction Question
             </Button>
@@ -195,7 +247,11 @@ export default function AddSpeakingTestPage() {
             <CardTitle>Part 1</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Button type="button" variant="outline" onClick={() => addQuestion("part1")}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => addQuestion("part1")}
+            >
               <PlusCircle className="w-4 h-4 mr-2" />
               Add Part 1 Question
             </Button>
@@ -209,7 +265,11 @@ export default function AddSpeakingTestPage() {
             <CardTitle>Part 2</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Button type="button" variant="outline" onClick={() => addQuestion("part2")}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => addQuestion("part2")}
+            >
               <PlusCircle className="w-4 h-4 mr-2" />
               Add Part 2 Question
             </Button>
@@ -223,7 +283,11 @@ export default function AddSpeakingTestPage() {
             <CardTitle>Part 3</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Button type="button" variant="outline" onClick={() => addQuestion("part3")}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => addQuestion("part3")}
+            >
               <PlusCircle className="w-4 h-4 mr-2" />
               Add Part 3 Question
             </Button>
@@ -276,7 +340,12 @@ And explain why you liked/disliked it."
           </CardContent>
         </Card>
 
-        <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
+        <Button
+          type="submit"
+          size="lg"
+          className="w-full"
+          disabled={isSubmitting}
+        >
           {isSubmitting ? "Saving..." : "Save Speaking Test"}
         </Button>
       </form>

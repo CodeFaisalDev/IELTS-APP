@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, use } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -22,11 +22,10 @@ import ResultModal from "./components/ResultModal";
 import ReadingTestUI from "./components/ReadingTestUI";
 import { ReadingTestData } from "./types";
 
-export default function ReadingTestPage({
-  params,
-}: {
-  params: { slug: string };
+export default function ReadingTestPage(props: {
+  params: Promise<{ slug: string }>;
 }) {
+  const params = use(props.params);
   const [test, setTest] = useState<ReadingTestData | null>(null);
   const [loading, setLoading] = useState(true);
   const [started, setStarted] = useState(false);
@@ -112,7 +111,7 @@ export default function ReadingTestPage({
 
       <ResultModal
         isOpen={showResultModal}
-        onClose={() => setShowResultModal(false)}
+        // onClose={() => setShowResultModal(false)}
         userAnswers={userAnswers}
         backendAnswers={test.answers || {}}
       />

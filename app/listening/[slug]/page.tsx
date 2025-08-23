@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useMemo, useRef, use } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlayCircle, Loader2, Clock, BookOpen, Volume2 } from "lucide-react";
@@ -21,15 +21,19 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-export default function ListeningTestPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
+// Updated props interface to match Next.js 15 expectations
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export default function ListeningTestPage(props: PageProps) {
   const [test, setTest] = useState<ListeningTestData | null>(null);
   const [loading, setLoading] = useState(true);
   const [started, setStarted] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  // Use the `use` hook to await the params Promise
+  const params = use(props.params);
 
   useEffect(() => {
     const fetchTest = async () => {
@@ -113,7 +117,7 @@ export default function ListeningTestPage({
             <AlertDialogTitle>Finish Exam</AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to finish the exam and see the results? Once
-              you click "Yes", you cannot go back to the test.
+              you click &ldquo;Yes&rdquo;, you cannot go back to the test.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

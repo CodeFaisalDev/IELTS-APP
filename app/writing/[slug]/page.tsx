@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -39,11 +39,12 @@ import LoadingModal from "./components/LoadingModal";
 import { WritingTestData } from "./types";
 import { parseWritingTestContent } from "./util/parser";
 
-export default function WritingTestPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
+export default function WritingTestPage(
+  props: {
+    params: Promise<{ slug: string }>;
+  }
+) {
+  const params = use(props.params);
   const [test, setTest] = useState<WritingTestData | null>(null);
   const [loading, setLoading] = useState(true);
   const [started, setStarted] = useState(false);

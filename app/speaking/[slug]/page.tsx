@@ -1,7 +1,7 @@
 // app/speaking/[slug]/page.tsx
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, use } from "react";
 import {
   Mic,
   Send,
@@ -33,11 +33,10 @@ import {
   EvaluationResult,
 } from "./types";
 
-export default function SpeakingTestPage({
-  params,
-}: {
-  params: { slug: string };
+export default function SpeakingTestPage(props: {
+  params: Promise<{ slug: string }>;
 }) {
+  const params = use(props.params);
   const [initialLoading, setInitialLoading] = useState(true);
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [testData, setTestData] = useState<TestData | null>(null);
@@ -374,7 +373,7 @@ export default function SpeakingTestPage({
               <div className="flex items-center justify-center">
                 {testState === "preparing" ? (
                   <Button size="lg" onClick={handleStartSpeakingPart2}>
-                    I'm Ready to Speak
+                    I&apos;m Ready to Speak
                   </Button>
                 ) : (
                   testState !== "finished" && (

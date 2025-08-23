@@ -28,16 +28,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Parse answers JSON
-    let parsedAnswers = {};
-    try {
-      parsedAnswers = JSON.parse(answers);
-    } catch (error) {
-      return NextResponse.json(
-        { error: "Invalid answers format" },
-        { status: 400 }
-      );
-    }
+    // The 'answers' field is already a JSON object from request.json(),
+    // so no need to parse it again.
 
     // Create the reading test
     const readingTest = await prisma.readingTest.create({
@@ -47,12 +39,12 @@ export async function POST(request: NextRequest) {
         section1,
         section2,
         section3,
-        answers: parsedAnswers,
+        answers, // Pass the answers object directly
       },
     });
 
     return NextResponse.json(readingTest, { status: 201 });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error creating reading test:", error);
     return NextResponse.json(
       { error: "Internal server error" },
@@ -63,6 +55,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// Separate GET handler to follow Next.js conventions
 export async function GET() {
   try {
     const tests = await prisma.readingTest.findMany({
@@ -78,7 +71,7 @@ export async function GET() {
     });
 
     return NextResponse.json(tests);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error fetching reading tests:", error);
     return NextResponse.json(
       { error: "Internal server error" },

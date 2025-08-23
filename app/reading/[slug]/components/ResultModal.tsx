@@ -53,10 +53,8 @@ const getReadingBandScore = (correct: number, total: number): number => {
 // ---------------- Props & Types ----------------
 interface ResultModalProps {
   isOpen: boolean;
-  onClose: () => void;
   userAnswers: UserAnswers;
   backendAnswers: Record<string, string | string[]>;
-  onStartAnother?: () => void;
 }
 
 interface ResultDetail {
@@ -82,10 +80,8 @@ const checkAnswer = (
 // ---------------- Component ----------------
 export default function ResultModal({
   isOpen,
-  onClose,
   userAnswers,
   backendAnswers,
-  onStartAnother,
 }: ResultModalProps) {
   const [score, setScore] = useState(0);
   const [results, setResults] = useState<ResultDetail[]>([]);

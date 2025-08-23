@@ -46,8 +46,9 @@ export default function PrivacyPolicyPage() {
               <p className="mb-4">
                 While using our Service, we may ask you to provide us with
                 certain personally identifiable information that can be used to
-                contact or identify you ("Personal Data"). This may include, but
-                is not limited to, your email address, name, and usage data.
+                contact or identify you (&ldquo;Personal Data&rdquo;). This may
+                include, but is not limited to, your email address, name, and
+                usage data.
               </p>
               <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
                 Usage Data
@@ -55,10 +56,10 @@ export default function PrivacyPolicyPage() {
               <p>
                 When you access the Service, we may collect information that
                 your browser sends whenever you visit our Service or when you
-                access the Service by or through a mobile device ("Usage Data").
-                This Usage Data may include information such as your computer's
-                Internet Protocol (IP) address, browser type, pages visited, and
-                other diagnostic data.
+                access the Service by or through a mobile device (&ldquo;Usage
+                Data&rdquo;). This Usage Data may include information such as
+                your computer&rsquo;s Internet Protocol (IP) address, browser
+                type, pages visited, and other diagnostic data.
               </p>
             </section>
 

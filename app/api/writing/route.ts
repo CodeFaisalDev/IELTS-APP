@@ -38,7 +38,7 @@ async function processRichTextImages(content: string): Promise<string> {
       );
 
       processedContent = processedContent.replace(fullMatch, newImageTag);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error processing image:", error);
       // Continue with other images even if one fails
     }
@@ -72,20 +72,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Parse answers JSON
-    let parsedAnswers = {};
-    try {
-      if (answers && typeof answers === "string") {
-        parsedAnswers = JSON.parse(answers);
-      } else if (answers && typeof answers === "object") {
-        parsedAnswers = answers;
-      }
-    } catch (error) {
-      return NextResponse.json(
-        { error: "Invalid answers format" },
-        { status: 400 }
-      );
-    }
+    // `answers` field is already a JSON object from `request.json()`, so no need to parse it again.
 
     // Process images in rich text content
     const processedSection1 = section1
@@ -102,12 +89,12 @@ export async function POST(request: NextRequest) {
         slug,
         section1: processedSection1,
         section2: processedSection2,
-        answers: parsedAnswers,
+        answers: answers, // Pass the answers object directly
       },
     });
 
     return NextResponse.json(writingTest, { status: 201 });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error creating writing test:", error);
     return NextResponse.json(
       { error: "Internal server error" },
@@ -133,7 +120,7 @@ export async function GET() {
     });
 
     return NextResponse.json(tests);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error fetching writing tests:", error);
     return NextResponse.json(
       { error: "Internal server error" },
